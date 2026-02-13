@@ -32,3 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/application-dev.properties
+/logs/app.log
+/mvnw.cmd
+/mvnw
+/logs/app-2026-02-06.log
+/.mvn/wrapper/maven-wrapper.properties
