@@ -15,8 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerificationToken {
-    @Value("&{email.expirationMs}")
-    private int EXPIRATION ;
 
     @Id
     @GeneratedValue

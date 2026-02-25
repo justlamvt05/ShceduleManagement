@@ -8,6 +8,7 @@ import com.lamvt.shcedule.repository.VerificationTokenRepository;
 import com.lamvt.shcedule.service.VerificationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class VerificationServiceImpl implements VerificationService {
-
+    @Value("${email.expirationMs}")
+    private int expirationMs;
 
     private final VerificationTokenRepository tokenRepository;
 
@@ -29,6 +31,7 @@ public class VerificationServiceImpl implements VerificationService {
         
         VerificationToken verificationToken = VerificationToken.builder()
                 .token(token)
+                .expiryDate(LocalDateTime.now().plusMinutes(expirationMs))
                 .user(user)
                 .build();
         tokenRepository.save(verificationToken);

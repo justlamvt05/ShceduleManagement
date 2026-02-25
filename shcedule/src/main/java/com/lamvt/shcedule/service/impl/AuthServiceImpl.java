@@ -18,6 +18,7 @@ import com.lamvt.shcedule.service.AuthService;
 import com.lamvt.shcedule.service.UserService;
 import com.lamvt.shcedule.service.VerificationService;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public ApiResponse<?> register(RegisterRequest request) throws MessagingException {
         validateRegisterRequest(request);
         User user = User.builder()
@@ -65,10 +67,12 @@ public class AuthServiceImpl implements AuthService {
                 .authProvider(AuthProvider.GOOGLE)
                 .status(EStatus.INACTIVE)
                 .build();
-        String token =  verificationService.createToken(user);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        userService.sendVerificationEmail(user,token);
+        String token =  verificationService.createToken(savedUser);
+
+
+        userService.sendVerificationEmail(savedUser,token);
         return ApiResponse.success("Register successfully");
     }
 
